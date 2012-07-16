@@ -1163,8 +1163,16 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS) $(SEL
 	   -k $(KEY_CERT_PAIR) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
 
-.PHONY: otapackage
+.PHONY: otapackage broccoli
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
+broccoli: otapackage
+ifneq ($(TARGET_CUSTOM_RELEASETOOL),)
+	@echo "Running custom releasetool..."
+	$(hide) $(TARGET_CUSTOM_RELEASETOOL)
+else
+	@echo "Running releasetool..."
+	$(hide) ./vendor/RootzBoat/tools/squisher
+endif
 
 # -----------------------------------------------------------------
 # The update package
